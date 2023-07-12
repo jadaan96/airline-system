@@ -2,4 +2,13 @@
 ### UML 
 ![UML](./Untitled%20(6).jpg)
 #### the output 
-![test](./test.png)
+#### pilot
+![pilot](./pilot.png)
+#### manager
+![manager](./manger.png)
+#### system
+
+![system](./system.png)
+#### airline
+
+![airline](./airline.png)

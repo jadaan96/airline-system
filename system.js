@@ -1,38 +1,37 @@
 
-const faker = require('faker');
 
 const eventsPool = require('./events');
-require('./pilot')
-require('./manager')
-let flight = {
-  event: 'new-flight',
-  time: new Date(),
-  Details: {
-    airLine: 'Royal Jordanian Airlines',
-    flightID: faker.datatype.uuid(),
-    pilot: faker.name.firstName(),
-    destination: faker.address.city(),
-  },
-};
 
-eventsPool.on('controls', (payload) => {
-  setInterval(() => {
-    payload.event = 'new-flight'
+
+
+
+eventsPool.on('newFlight', (payload) => {
+
+  payload.event = 'new-flight'
     payload.time = new Date(),
+  
+      console.log(`Flight : ` , payload); 
+     
+})
+eventsPool.on("took-off",(payload) =>{
 
-      eventsPool.emit('newFlight', payload)
-    setTimeout(() => {
-      eventsPool.emit('took-off', payload)
-    }, 4000)
-    setTimeout(() => {
-      eventsPool.emit('Arrived', payload)
-    }, 7000)
-  }, 10000)
+  payload.event = 'took_off'
+  payload.time = new Date(),
+
+  console.log('Flight : ' , payload);
 })
 
-eventsPool.emit('controls', flight)
+eventsPool.on("Arrived",(payload) =>{
+payload.event = 'Arrived'
+payload.time = new Date(),
+
+console.log('Flight : ' , payload);
+// console.log(`Manager: we’re greatly thankful for the amazing flight, ${payload.Details.pilot}`);
+
+})
+// eventsPool.emit('controls', flight)
 
 
 
-
-
+require('./manager')
+require('./pilot')

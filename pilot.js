@@ -17,21 +17,16 @@ const eventsPool = require('./events');
 //      },7000)
 // })
 
-eventsPool.on("took-off" ,(payload) =>{
-     payload.event = 'took_off'
-     payload.time = new Date(),
-     console.log(`Pilot: flight with ID ${payload.Details.flightID} took-off`);
+eventsPool.on('newFlight' , (payload) =>{
+     setTimeout(()=>{
+          console.log(`Pilot: flight with ID ${payload.Details.flightID} took-off`);
+          eventsPool.emit('took-off', payload)
 
-     console.log('Flight : ' , payload);
-})
+     },4000)
+     setTimeout(() => {
+         
+          console.log(`Pilot: flight with ID ${payload.Details.flightID} Arrived`);
+          eventsPool.emit('Arrived', payload)
 
-eventsPool.on('Arrived' , (payload) =>{
-     payload.event = 'Arrived'
-     payload.time = new Date(),
-     console.log(`Pilot: flight with ID ${payload.Details.flightID} Arrived`);
-
-     console.log('Flight : ' , payload);
-     console.log(`Manager: we’re greatly thankful for the amazing flight, ${payload.Details.pilot}`);
-
-
+}, 7000);
 })

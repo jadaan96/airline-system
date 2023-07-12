@@ -1,7 +1,7 @@
 'use strict';
 
 require('dotenv').config();
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 const host = `http://localhost:${port}`;
 const faker = require('faker');
 
@@ -19,7 +19,7 @@ setInterval(()=>{
           destination: faker.address.city(),
         },
       };
-    socket.emit('light',flight);
+    socket.emit('light');
 },10000)
 
   

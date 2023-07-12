@@ -1,6 +1,6 @@
 'use strict'
 require('dotenv').config();
-const port = process.env.PORT || 3001
+const port = process.env.PORT || 3000
 // const {flight} =require('./fire-events')
 
 const io = require('socket.io')(port)
@@ -12,51 +12,48 @@ const airLine = io.of('/airline')
 
 io.on("connection", socket => {
   console.log("the system is live in id", socket.id);
-  socket.on('light', (flight) => {
+  // socket.on('light', () => {
 
-  // setInterval(() => {
-    flight.event = 'new-flight'
-    flight.time = new Date(),
+   
 
-    io.emit('newFlight', flight)
+  socket.on('newFlight', (payload) => {
+    io.emit('newFlight',(payload))
+      payload.event = 'new-flight'
+        payload.time = new Date(),
+    
+          console.log(`Flight : ` , payload); 
+          // socket.emit('took-off', payload)
 
-    flight.event = 'new-flight'
-    flight.time = new Date(),
-      console.log(`Flight : `, flight);
+    })
+    socket.on("took-off",(payload) =>{
 
-    setTimeout(() => {
-      io.emit('took-off', flight)
+        payload.event = 'took_off'
+        payload.time = new Date(),
+        console.log('Flight : ' , payload);
+        airLine.emit("airline",payload)
 
-      flight.event = 'took-off'
-    flight.time = new Date(),
-      console.log(`Flight : `, flight);
-      airLine.emit("airline",flight)
-    }, 4000)
 
-    setTimeout(() => {
+      })
+
   
-      io.emit('Arrived', flight)
-      flight.event = 'Arrived'
-    flight.time = new Date(),
-      console.log(`Flight : `, flight);
+      socket.on("Arrived",(payload) =>{
+        payload.event = 'Arrived'
+        payload.time = new Date(),
+        
+        console.log('Flight : ' , payload);
+        
+        })
 
-    }, 7000)
-  // }, 10000)
 })
 
-})
+// })
 
 
-// console.log(flight,"asdasdasdasd");
 
 airLine.on('connection', (socket) => {
   console.log('Connected to the air line space,', socket.id);
-
-
+  
 });
-
-
-
 
 
 

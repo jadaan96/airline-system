@@ -5,7 +5,8 @@ const port = process.env.PORT || 3000
 
 const io = require('socket.io')(port)
 const airLine = io.of('/airline')
-
+const uuid=require('uuid').v4
+const queue= {}
 
 // console.log({flight});
 
@@ -19,12 +20,13 @@ io.on("connection", socket => {
   socket.on('newFlight', (payload) => {
     io.emit('newFlight',(payload))
       payload.event = 'new-flight'
-        payload.time = new Date(),
-    
+        payload.time = new Date();
+        
           console.log(`Flight : ` , payload); 
-          // socket.emit('took-off', payload)
-
-    })
+          let id= uuid()
+          queue[id]=payload
+          io.emit('get-all', { id, queue: queue });
+            })
     socket.on("took-off",(payload) =>{
 
         payload.event = 'took_off'
@@ -41,8 +43,30 @@ io.on("connection", socket => {
         payload.time = new Date(),
         
         console.log('Flight : ' , payload);
-        
+       
         })
+        socket.on('stord-flight',()=>{
+          Object.keys(queue).forEach(id => {
+            socket.emit('get-all', {
+              id,
+              queue: queue[id]
+              
+            })
+      
+          })
+          // io.emit('get-all',{ id, queue: queue });
+
+        })
+
+          socket.on('finished_flight', ()=>{
+            Object.keys(queue).forEach(id => {
+              socket.emit('fligt',id)
+              delete queue[id]
+            })
+            console.log(queue,'the final queue');
+     
+          })
+
 
 })
 

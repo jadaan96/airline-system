@@ -32,7 +32,6 @@ io.on("connection", socket => {
         payload.event = 'took_off'
         payload.time = new Date(),
         console.log('Flight : ' , payload);
-        airLine.emit("airline",payload)
 
 
       })
@@ -76,6 +75,15 @@ io.on("connection", socket => {
 
 airLine.on('connection', (socket) => {
   console.log('Connected to the air line space,', socket.id);
+
+  socket.on("took-off",(payload) =>{
+
+    payload.event = 'took_off'
+    payload.time = new Date(),
+    console.log('Flight : ' , payload);
+
+
+  })
   
 });
 

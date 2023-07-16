@@ -25,7 +25,7 @@ io.on("connection", socket => {
           console.log(`Flight : ` , payload); 
           let id= uuid()
           queue[id]=payload
-          io.emit('get-all', { id, queue: queue });
+          // io.emit('get-all', { id, queue: queue });
             })
     socket.on("took-off",(payload) =>{
 
